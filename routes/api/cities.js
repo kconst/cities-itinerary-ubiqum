@@ -19,10 +19,10 @@ router.post('/', (req, res, next) => {
     })
     console.log(addCity)
     addCity.save((err, files) => {
-        if(err) {console.log(err)}
+        if (err) { console.log(err) }
         res.status(201).json(files)
     })
-        
-    });
+
+});
 
 module.exports = router;

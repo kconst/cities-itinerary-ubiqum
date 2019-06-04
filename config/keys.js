@@ -1,0 +1,17 @@
+// if (process.env.NODE_ENV === 'production') {
+//   module.exports = require('./keys_prod')
+// } else {
+//   module.exports = require('./keys_dev')
+// }
+
+
+module.exports = {
+  secret: "secret",
+  mongoURI:
+    "mongodb+srv://lucas:LYG6p7jsaXtFhE0h@cluster0-wxkjq.mongodb.net/test?retryWrites=true",
+  google: {
+    clientID:
+      "8602733895-skmu71nftufejcsaoqup1bkakus52soo.apps.googleusercontent.com",
+    clientSecret: "DmiMQ4eDtdRE4liQcbb985Bo"
+  }
+};

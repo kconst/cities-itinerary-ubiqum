@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
 
 const usersSchema = new mongoose.Schema({
-    username: {
+    name: {
         type: String,
         required: true
     },
-    avatarPicture: {
+    img: {
+        type: String,
+    },
+    googleId: {
         type: String,
     },
     email: {
@@ -16,17 +19,15 @@ const usersSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    },
-    passwordConfirmation: {
-        type: String,
-    },
-    date: {
-        type: Date,
-        default: Date.now
-    },
-    favoriteItineraries: {
-        type: Array
     }
+    // date: {
+    //     type: Date,
+    //     default: Date.now
+    // },
+    // favoriteItineraries: {
+    //     type: Array
+    // }
 })
-
 module.exports = mongoose.model('user', usersSchema)
+
+
