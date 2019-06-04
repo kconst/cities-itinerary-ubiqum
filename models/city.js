@@ -8,7 +8,10 @@ const citiesSchema = new mongoose.Schema({
     country: {
         type: String,
         required: true
-    } 
+    },
+    img: {
+        type: String,
+    }
 })
 
 //name if module is the singular of how the database is called

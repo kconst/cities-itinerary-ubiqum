@@ -1,32 +1,34 @@
-const mongoose = require('mongoose')
-//creating schema for itineraries: a schema defines document properties through an object where the key name corresponds
-//to the property name in the collection.
-const itinerariesSchema = new mongoose.Schema({
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const ItinerarySchema = new Schema({
     city: {
-        // //telling mongoose that I will be referencing other objects from other collections
-        // type: mongoose.Schema.Types.ObjectId,
-        // //telling mongoose which model to use
-        // ref: 'city'
         type: String,
         required: true
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
     },
     title: {
         type: String,
         required: true
     },
-    profilePic: String,
-    rating: Number,
-    duration: {
-        type: Number,
+    img: {
+        type: String,
         required: true
     },
-    price: Number,
-    hashtag: Array,
-    activities: {
-        type: Array,
-        required: true
+    summary: {
+        type: String
+    },
+    duration: {
+        type: String
+    },
+    price: {
+        type: String
+    },
+    rating: {
+        type: String
     }
-})
-//exporting a model and passing the collection name and the schema definition
-//name of module is the singular of how the database is called
-module.exports = mongoose.model('itinerary', itinerariesSchema)
+});
+module.exports = Itinerary = mongoose.model('itinerary', ItinerarySchema);

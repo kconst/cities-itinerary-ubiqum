@@ -15,7 +15,8 @@ router.post('/', (req, res, next) => {
     console.log(req.body)
     let addCity = new cityModel({
         name: req.body.name,
-        country: req.body.country
+        country: req.body.country,
+        img: req.body.img
     })
     console.log(addCity)
     addCity.save((err, files) => {
