@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(cors())
 mongoose.connect(db, { useNewUrlParser: true, useCreateIndex: true })
-    .then(() => console.log('connected!'))
+    .then(() => console.log('Connection to Mongo DB established'))
     .catch(err => console.log(err));
 
 
@@ -32,13 +32,10 @@ const userRoutes = require('./routes/api/users');
 const commentRoutes = require('./routes/api/comments');
 
 
-
-//passport middleware
-
 //passport configuration
-//require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
+require('./config/passport')(passport);
 
 //using the routes for a specific api
 app.use('/api/cities', cityRoutes);
@@ -48,8 +45,7 @@ app.use('/api/comments', commentRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
-    console.log(`server ${port}`)
-    console.log('Server is running on ' + port + 'port')
+    console.log(`Express server running on port ${port}`)
     // console.log(process.env.MONGODB_NAME)
 }
 

@@ -7,6 +7,8 @@ const usersSchema = new mongoose.Schema({
     },
     img: {
         type: String,
+        default:
+            'https://minervastrategies.com/wp-content/uploads/2016/03/default-avatar.jpg'
     },
     googleId: {
         type: String,
@@ -19,14 +21,14 @@ const usersSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    },
+    favoriteItineraries: {
+        type: Array
     }
-    // date: {
-    //     type: Date,
-    //     default: Date.now
-    // },
-    // favoriteItineraries: {
-    //     type: Array
-    // }
 })
 module.exports = mongoose.model('user', usersSchema)
 
