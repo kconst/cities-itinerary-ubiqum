@@ -134,7 +134,8 @@ router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
 });
 
 router.get("/all",
-    passport.authenticate("jwt", { session: false }),
+    /* Uncomment to add web token athentification */
+    //passport.authenticate("jwt", { session: false }),
     (req, res) => {
         User.find({})
             .then(users => {
@@ -156,7 +157,7 @@ router.get("/",
     passport.authenticate("jwt", { session: false }),
     (req, res) => {
         const { id } = req.query
-        // User.findOne({ _id: req.user.id })
+         User.findOne({ _id: req.user.id })
         User.findOne({ _id: id })
             .then(response => {
                 // remove password before sending back
@@ -168,13 +169,13 @@ router.get("/",
             .catch(err => res.status(404).json({ error: "User does not exist!" }));
     }
 );
-// router.get('/', (req, res) => {
-//     User.find({})
-//         .then(files => {
-//             res.send(files)
-//         })
-//         .catch(err => console.log(err));
-// });
+router.get('/', (req, res) => {
+    User.find({})
+        .then(files => {
+            res.send(files)
+        })
+        .catch(err => console.log(err));
+});
 
 router.post('/addToFavorite',
     passport.authenticate('jwt', { session: false }),
