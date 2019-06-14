@@ -42,9 +42,9 @@ app.use('/api/itineraries', itineraryRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/comments', commentRoutes);
 
-//google domain verification
+//TO REMOVE -> google domain verification
 app.get('/google1132ff054dbd1d04.html', function (req, res) {
-    res.sendFile('google1132ff054dbd1d04.html');
+    res.send('google-site-verification: google1132ff054dbd1d04.html');
 });
 
 const port = process.env.PORT || 5000;
