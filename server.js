@@ -1,17 +1,15 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-
 const mongoose = require('mongoose');
 const cors = require('cors')
-
 const passport = require('passport');
-const passportSetup = require('./config/passport');
+
+//importing Mongo DB credentials (git ignore)
+const db = require('./config/keys').mongoURI;
 
 const app = express();
 
-//importing the mongoURI
-const db = require('./config/keys').mongoURI;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -28,7 +26,6 @@ mongoose.connect(db, { useNewUrlParser: true, useCreateIndex: true })
 const cityRoutes = require('./routes/api/cities');
 const itineraryRoutes = require('./routes/api/itineraries');
 const userRoutes = require('./routes/api/users');
-const commentRoutes = require('./routes/api/comments');
 
 
 //passport configuration
@@ -40,7 +37,6 @@ require('./config/passport')(passport);
 app.use('/api/cities', cityRoutes);
 app.use('/api/itineraries', itineraryRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/comments', commentRoutes);
 
 //TO REMOVE -> google domain verification
 app.get('/google1132ff054dbd1d04.html', function (req, res) {
@@ -50,9 +46,6 @@ app.get('/google1132ff054dbd1d04.html', function (req, res) {
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Express server running on port ${port}`)
-    // console.log(process.env.MONGODB_NAME)
-}
-
-);
+});
 
 

@@ -7,8 +7,48 @@ const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const passport = require('passport');
 
-router.post('/register', async (req, res) => {
+/*get all users*/
+router.get("/",
+    /* Uncomment next line to add web token athentification */
+    //passport.authenticate("jwt", { session: false }),
+    (req, res) => {
+        User.find({})
+            .then(users => {
+                res.json(
+                    users.map(e => {
+                        return {
+                            id: e.id,
+                            name: e.name,
+                            email: e.email
+                        }
+                    }
+                    ))
+            })
+            .catch(err => res.status(404).json({ error: "No users" }));
+    }
+);
 
+/*get user by ID*/
+router.get("/:id",
+    /* Uncomment next line to add web token athentification */
+    //passport.authenticate("jwt", { session: false }),
+    (req, res) => {
+        const { id } = req.params
+        User.findOne({ _id: req.user.id })
+        User.findOne({ _id: id })
+            .then(response => {
+                // remove password before sending back
+                const userDetails = Object.assign({}, response._doc);
+                delete userDetails.password;
+
+                res.json(userDetails);
+            })
+            .catch(err => res.status(404).json({ error: "User does not exist!" }));
+    }
+);
+
+/* register user*/
+router.post('/register', async (req, res) => {
     const { name, email, password, img } = req.body
     try {
         let user = await User.findOne({ email })
@@ -21,12 +61,9 @@ router.post('/register', async (req, res) => {
             img,
             password
         })
-
         const salt = await bcrypt.genSalt(10)
         user.password = await bcrypt.hash(password, salt)
-
         await user.save()
-
         const payload = {
             user: {
                 id: user.id
@@ -53,13 +90,10 @@ router.post('/register', async (req, res) => {
     }
 })
 
-module.exports = router
-
-
+/*email login*/
 router.post('/login', (req, res) => {
     const { email, password } = req.body;
     //find user by email
-
     User.findOne({ email })
         .then(user => {
             //check if user exists
@@ -69,7 +103,6 @@ router.post('/login', (req, res) => {
             if (!password) {
                 return res.status(400).json({ error: 'Enter password' });
             }
-
             //check password
             bcrypt.compare(password, user.password).then(isMatch => {
                 if (isMatch) {
@@ -102,7 +135,8 @@ router.post('/login', (req, res) => {
                 .catch(err => console.log(err));
         });
 });
-// auth with google+
+
+// auth with google
 router.get('/google', passport.authenticate('google', {
     scope: ['email', 'profile']
 }));
@@ -130,55 +164,15 @@ router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
             });
         }
     );
-    //res.redirect('/profile');
+    //redirect to front-end
+    //res.redirect('/');
 });
 
-router.get("/all",
-    /* Uncomment to add web token athentification */
-    //passport.authenticate("jwt", { session: false }),
-    (req, res) => {
-        User.find({})
-            .then(users => {
-                res.json(
-                    users.map(e => {
-                        return {
-                            id: e.id,
-                            name: e.name,
-                            email: e.email
-                        }
-                    }
-                    ))
-            })
-            .catch(err => res.status(404).json({ error: "No users" }));
-    }
-);
 
-router.get("/",
-    passport.authenticate("jwt", { session: false }),
-    (req, res) => {
-        const { id } = req.query
-         User.findOne({ _id: req.user.id })
-        User.findOne({ _id: id })
-            .then(response => {
-                // remove password before sending back
-                const userDetails = Object.assign({}, response._doc);
-                delete userDetails.password;
-
-                res.json(userDetails);
-            })
-            .catch(err => res.status(404).json({ error: "User does not exist!" }));
-    }
-);
-router.get('/', (req, res) => {
-    User.find({})
-        .then(files => {
-            res.send(files)
-        })
-        .catch(err => console.log(err));
-});
-
+/*add  itinerary to user favorites*/
 router.post('/addToFavorite',
-    passport.authenticate('jwt', { session: false }),
+    /* Uncomment next line to add web token athentification */
+    //passport.authenticate("jwt", { session: false }),
     (req, res) => {
         user.findOne({ _id: req.user.id })
             .then(user => {
@@ -223,26 +217,27 @@ router.post('/addToFavorite',
     }
 );
 
+/*remove itinerary from user favorites*/
 router.post('/removeFromFavorite',
-    passport.authenticate('jwt', { session: false }),
+    /* Uncomment next line to add web token athentification */
+    //passport.authenticate("jwt", { session: false }),
     (req, res) => {
         user.findOne({ _id: req.user.id })
             .then(user => {
 
-                let currentFavItineraries = user.favoriteItineraries.filter(oneFavItin => oneFavItin.itineraryId === req.body.itineraryId)
-
+                let currentFavItineraries = user.favoriteItineraries.filter(oneFavItin =>
+                    oneFavItin.itineraryId === req.body.itineraryId)
                 if (currentFavItineraries.length === 0) {
                     res
                         .status(400)
                         .json({ error: "User did not like this itinerary!" });
                 }
-
                 itineraryModel.findOne({ _id: req.body.itineraryId })
                     .then(itinerary => {
-                        const indexItinToRemove = user.favoriteItineraries.map(oneFavItin => oneFavItin.itineraryId).indexOf(req.body.itineraryId);
+                        const indexItinToRemove = user.favoriteItineraries.map(oneFavItin =>
+                            oneFavItin.itineraryId).indexOf(req.body.itineraryId);
                         console.log(indexItinToRemove)
                         user.favoriteItineraries.splice(indexItinToRemove, 1);
-
                         user
                             .save()
                             .then(userFavItin => res.json(user.favoriteItineraries))
