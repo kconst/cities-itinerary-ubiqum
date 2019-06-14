@@ -6,10 +6,6 @@ const ItinerarySchema = new Schema({
         type: String,
         required: true
     },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'users'
-    },
     title: {
         type: String,
         required: true

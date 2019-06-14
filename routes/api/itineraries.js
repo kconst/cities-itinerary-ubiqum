@@ -25,10 +25,24 @@ router.get('/:id', (req, res) => {
     })
 });
 
-// router.get('/:id/comments', (req, res) => {
-//     let cityRequested = req.params.id;
+router.post('/', (req, res, next) => {
+    console.log(req.body)
+    const { city, title, img, summary, duration,
+        price, rating } = req.body
+    let addItinerary = new itineraryModel({
+        city: city,
+        title: title,
+        img: img,
+        summary: summary,
+        duration: duration,
+        price: price,
+        rating: rating
+    })
+    addItinerary.save((err, files) => {
+        if (err) { console.log(err) }
+        res.status(201).json(files)
+    })
 
-// })
-
+});
 
 module.exports = router
