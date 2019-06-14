@@ -4,7 +4,7 @@ const router = express.Router();
 const itineraryModel = require('../../models/itinerary')
 
 /*get all itineraries*/
-router.get('/',
+router.get('/all',
     /* Uncomment next line to add web token athentification */
     //passport.authenticate("jwt", { session: false }),
     (req, res) => {

@@ -1,18 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-var User = require('../../models/user');
+var userModel = require('../../models/user');
 const itineraryModel = require('../../models/itinerary');
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const passport = require('passport');
 
 /*get all users*/
-router.get("/",
+router.get("/all",
     /* Uncomment next line to add web token athentification */
     //passport.authenticate("jwt", { session: false }),
     (req, res) => {
-        User.find({})
+        userModel.find({})
             .then(users => {
                 res.json(
                     users.map(e => {
@@ -29,13 +29,12 @@ router.get("/",
 );
 
 /*get user by ID*/
-router.get("/:id",
+router.get('/:id',
     /* Uncomment next line to add web token athentification */
     //passport.authenticate("jwt", { session: false }),
     (req, res) => {
         const { id } = req.params
-        User.findOne({ _id: req.user.id })
-        User.findOne({ _id: id })
+        userModel.findOne({ _id: id })
             .then(response => {
                 // remove password before sending back
                 const userDetails = Object.assign({}, response._doc);
@@ -51,11 +50,11 @@ router.get("/:id",
 router.post('/register', async (req, res) => {
     const { name, email, password, img } = req.body
     try {
-        let user = await User.findOne({ email })
+        let user = await userModel.findOne({ email })
         if (user) {
             res.status(400).json({ errors: [{ msg: 'Email taken.' }] })
         }
-        user = new User({
+        user = new userModel({
             name,
             email,
             img,
@@ -94,7 +93,7 @@ router.post('/register', async (req, res) => {
 router.post('/login', (req, res) => {
     const { email, password } = req.body;
     //find user by email
-    User.findOne({ email })
+    userModel.findOne({ email })
         .then(user => {
             //check if user exists
             if (!user) {
@@ -174,7 +173,7 @@ router.post('/addToFavorite',
     /* Uncomment next line to add web token athentification */
     //passport.authenticate("jwt", { session: false }),
     (req, res) => {
-        user.findOne({ _id: req.user.id })
+        userModel.findOne({ _id: req.user.id })
             .then(user => {
 
                 let currentFavItineraries = user.favoriteItineraries.filter(oneFavItin => oneFavItin.itineraryId === req.body.itineraryId)
@@ -222,7 +221,7 @@ router.post('/removeFromFavorite',
     /* Uncomment next line to add web token athentification */
     //passport.authenticate("jwt", { session: false }),
     (req, res) => {
-        user.findOne({ _id: req.user.id })
+        userModel.findOne({ _id: req.user.id })
             .then(user => {
 
                 let currentFavItineraries = user.favoriteItineraries.filter(oneFavItin =>
